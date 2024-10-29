@@ -1,0 +1,13 @@
+tempo:
+  configs:
+    - name: default
+      push_config:
+        endpoint: tempo-us-central1.grafana.net:443
+        basic_auth:
+          username: admin
+          password: admin
+      
+      receivers:
+        otlp:
+          protocols:
+            grpc:

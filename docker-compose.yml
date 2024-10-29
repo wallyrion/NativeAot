@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    container_name: aspire-dashboard-for-benchmarks
+    ports:
+      - "5668:18888"
+      - "5669:18889"
+    environment:
+      DASHBOARD__OTLP__AUTHMODE: "ApiKey"
+      DASHBOARD__OTLP__PRIMARYAPIKEY: "dev"
+      DASHBOARD__Frontend__BrowserToken: "admin"
+    networks:
+      - custom-network
+    restart: unless-stopped
+    tty: true
+
+  dotnet1:
+    image: dotnet1
+    depends_on:
+      - dashboard
+    ports:
+      - "632:8080"
+    networks:
+      - custom-network
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
+      OTEL_EXPORTER_OTLP_HEADERS: "x-otlp-api-key=dev"
+  
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - custom-network
+    restart: unless-stopped
+
+
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - custom-network
+    restart: unless-stopped
+
+networks:
+  custom-network:
+    driver: bridge
+
+volumes:
+  prometheus-data:
+  grafana-data:
+
