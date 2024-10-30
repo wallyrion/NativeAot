@@ -8,12 +8,19 @@ global:
 scrape_configs:
   # Scrape Prometheus itself
   - job_name: "prometheus"
-    scrape_interval: 1s # Poll quickly for a more responsive demo
+    scrape_interval: 2s # Poll quickly for a more responsive demo
     static_configs:
       - targets: ["localhost:9090"]
 
-  # Scrape your .NET API (dotnet1 service)
-  - job_name: "myapi"
-    scrape_interval: 1s # Poll quickly for a more responsive demo
+  # Scrape your .NET API (webapp_local service)
+  - job_name: "webapp_no_aot"
+    scrape_interval: 3s # Poll quickly for a more responsive demo
     static_configs:
-      - targets: ["dotnet1:8080"]
+      - targets: ["webapp_no_aot:8080"]
+  
+  # Scrape your .NET API (webapp_local service)
+  - job_name: "webapp_aot"
+    scrape_interval: 3s # Poll quickly for a more responsive demo
+    static_configs:
+      - targets: [ "webapp_aot:8080" ]
+

@@ -2,19 +2,12 @@ import { sleep, check } from 'k6';
 import http from 'k6/http';
 import { randomIntBetween } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
 
-const pageSize = 100;
-const baseUrl = 'http://localhost:632'
-
-
-
-
 export const options = {
     stages: [
         { duration: '30s', target: 50 },
-        { duration: '1m', target: 500 }, // simulate ramp-up of traffic from 1 to 100 users over 5 minutes.
+         { duration: '2m', target: 2000 }, // simulate ramp-up of traffic from 1 to 100 users over 5 minutes.
         { duration: '1m', target: 0 }, // ramp-down to 0 users
-        { duration: '5m', target: 50000 }, // ramp-down to 0 users
-        { duration: '1m', target: 20 }, 
+        { duration: '4m', target: 10 }, // ramp-down to 0 users 
     ],
     thresholds: {
         http_req_failed: ['rate<0.01'], // http errors should be less than 1%
@@ -29,9 +22,15 @@ export function setup() {
 
 export default function () {
 
-    const query = `${baseUrl}/weatherforecast`;
-    const res = http.get(query);
+    const query = `${__ENV.BASE_URL}/todos`;
+    const response = http.get(query);
+        /*['GET', 'http://104.46.60.108:3680/todos', null, { tags: { deployed: 'virtual_machine' } }],*/
+
 
     sleep(1)
-    check(res, { 'status was 200': (r) => r.status == 200 });
+    check(response, {
+        'status 200 local': (res) => res.status === 200,
+    });  
+    
+    
 }

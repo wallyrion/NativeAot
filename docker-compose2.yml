@@ -1,35 +1,44 @@
 version: '3.9'
 
 services:
-  k6_test_no_aot:
-    image: grafana/k6
+  k6_test:
+    image: loadimpact/k6
+    container_name: test_k6
     volumes:
-      - ./k6-scripts/:/src
-    command:
-      run -o experimental-prometheus-rw --tag testid=first /src/k6.js 
+      - /k6-scripts/:/src
+    command: run /src/k6.js
     environment:
-      K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
-      BASE_URL: "http://webapp_no_aot:8080"
-    
-    networks:
-      - custom-network
+      BASE_URL: "http://104.46.60.108:3680"
     ports:
       - "6565:6565"
   
-  k6_test_aot:
-    image: grafana/k6
-    volumes:
-      - ./k6-scripts/:/src
-    command:
-      run -o experimental-prometheus-rw --tag testid=second /src/k6.js
+  
+  dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    container_name: aspire-dashboard-for-benchmarks
+    ports:
+      - "5468:18888"
+      - "5469:18889"
     environment:
-      K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
-      BASE_URL: "http://webapp_aot:8080"
-
+      DASHBOARD__OTLP__AUTHMODE: "ApiKey"
+      DASHBOARD__OTLP__PRIMARYAPIKEY: "dev"
+      DASHBOARD__Frontend__BrowserToken: "admin"
     networks:
       - custom-network
+    restart: unless-stopped
+    tty: true
+
+  dotnet1:
+    image: dotnet1
+    depends_on:
+      - dashboard
     ports:
-      - "6566:6566"
+      - "633:8080"
+    networks:
+      - custom-network
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
+      OTEL_EXPORTER_OTLP_HEADERS: "x-otlp-api-key=dev"
   
   grafana:
     image: grafana/grafana
@@ -47,8 +56,9 @@ services:
     networks:
       - custom-network
     restart: unless-stopped
-  
-  
+
+
+
   prometheus:
     image: prom/prometheus
     container_name: prometheus
@@ -63,27 +73,12 @@ services:
     networks:
       - custom-network
     restart: unless-stopped
-  
-  webapp_no_aot:
-    image: dotnet1
-    ports:
-      - "634:8080"
-    networks:
-      - custom-network  
-        
-  webapp_aot:
-    image: dotnet1
-    ports:
-      - "635:8080"
-    networks:
-      - custom-network
 
 networks:
   custom-network:
     driver: bridge
 
-
 volumes:
   prometheus-data:
   grafana-data:
-  
+
