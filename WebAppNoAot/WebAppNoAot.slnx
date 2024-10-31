@@ -1,0 +1,3 @@
+﻿<Solution>
+  <Project Path="WebAppNoAot.csproj" Type="Classic C#" />
+</Solution>

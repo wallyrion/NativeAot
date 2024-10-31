@@ -1,37 +1,34 @@
+using System.Text.Json.Serialization;
+using OpenTelemetry;
 using OpenTelemetry.Metrics;
-using OpenTelemetry.Trace;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
 
-Console.WriteLine("OTEL_EXPORTER_OTLP_ENDPOINT = " + builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
-
-// Add services to the container.
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddOpenTelemetry()
     .WithMetrics(metrics =>
     {
         metrics.AddAspNetCoreInstrumentation();
-        //Our custom metrics
+
         metrics.AddMeter("System.Runtime");
         // Metrics provides by ASP.NET Core in .NET 8
         metrics.AddMeter("Microsoft.AspNetCore.Hosting");
         metrics.AddMeter("Microsoft.AspNetCore.Server.Kestrel");
-
-        metrics.AddOtlpExporter();
+        
         metrics.AddPrometheusExporter();
+        metrics.AddOtlpExporter();
     });
 
+
+builder.Services.ConfigureHttpJsonOptions(options => { options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default); });
+
 var app = builder.Build();
-
 app.MapPrometheusScrapingEndpoint();
-
-
 
 var todosApi = app.MapGroup("/todos");
 todosApi.MapGet("/", TodoGenerator.GenerateRandomTodo);
 
 app.Run();
+
 
 public record Todo(Guid Id, string? Title, string Description, DateOnly? DueBy = null, bool IsComplete = false);
 
@@ -67,3 +64,9 @@ public static class TodoGenerator
     }
 }
 
+
+
+[JsonSerializable(typeof(Todo[]))]
+internal partial class AppJsonSerializerContext : JsonSerializerContext
+{
+}

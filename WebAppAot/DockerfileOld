@@ -1,0 +1,19 @@
+﻿FROM mcr.microsoft.com/dotnet/nightly/sdk:9.0-noble-aot AS build
+
+# Install NativeAOT build prerequisites
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       clang zlib1g-dev
+
+WORKDIR /source
+
+COPY . .
+RUN dotnet publish -o /app WebAotSample.csproj
+
+FROM mcr.microsoft.com/dotnet/nightly/runtime-deps:9.0-noble-chiseled-aot
+EXPOSE 8080
+EXPOSE 8081
+
+WORKDIR /app
+COPY --from=build /app .
+ENTRYPOINT ["/app/WebAotSample"]

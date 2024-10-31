@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    container_name: aspire-dashboard-aot
+    ports:
+      - "5668:18888"
+      - "5669:18889"
+    environment:
+      DASHBOARD__OTLP__AUTHMODE: "ApiKey"
+      DASHBOARD__OTLP__PRIMARYAPIKEY: "dev"
+      DASHBOARD__Frontend__BrowserToken: "admin"
+    networks:
+      - custom-network
+    restart: unless-stopped
+    tty: true
+
+  aot-webapp:
+    image: aot-webapp
+    depends_on:
+      - dashboard
+    ports:
+      - "632:8080"
+    networks:
+      - custom-network
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
+      OTEL_EXPORTER_OTLP_HEADERS: "x-otlp-api-key=dev"
+  
+
+networks:
+  custom-network:
+    driver: bridge
+
