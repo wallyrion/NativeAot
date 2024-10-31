@@ -6,11 +6,17 @@ services:
     volumes:
       - ./k6-scripts/:/src
     command:
-      run -o experimental-prometheus-rw --tag testid=first /src/k6.js 
+      run -o experimental-prometheus-rw --tag testid=webapp_no_aot /src/k6.js 
     environment:
       K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
       BASE_URL: "http://webapp_no_aot:8080"
     
+    depends_on:
+      prometheus:
+        condition: service_healthy
+      grafana:
+        condition: service_healthy
+      
     networks:
       - custom-network
     ports:
@@ -21,7 +27,7 @@ services:
     volumes:
       - ./k6-scripts/:/src
     command:
-      run -o experimental-prometheus-rw --tag testid=second /src/k6.js
+      run -o experimental-prometheus-rw --tag testid=webapp_aot /src/k6.js
     environment:
       K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
       BASE_URL: "http://webapp_aot:8080"
@@ -47,7 +53,11 @@ services:
     networks:
       - custom-network
     restart: unless-stopped
-  
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/api/health" ]
+      interval: 2s
+      timeout: 5s
+      retries: 10
   
   prometheus:
     image: prom/prometheus
@@ -63,18 +73,77 @@ services:
     networks:
       - custom-network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 15s
+      retries: 10
+      start_period: 40s
+    depends_on:
+      - cadvisor
+  
+  dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    container_name: aspire-dashboard-for-benchmarks
+    ports:
+      - "5468:18888"
+      - "5469:18889"
+    environment:
+      DASHBOARD__OTLP__AUTHMODE: "ApiKey"
+      DASHBOARD__OTLP__PRIMARYAPIKEY: "dev"
+      DASHBOARD__Frontend__BrowserToken: "admin"
+    networks:
+      - custom-network
+    restart: unless-stopped
+    tty: true
   
   webapp_no_aot:
+    container_name: benchmark_webapp_no_aot
+    environment:
+      OTEL_SERVICE_NAME: "NoAotApp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
+      OTEL_EXPORTER_OTLP_Headers: "x-otlp-api-key=dev"
     image: dotnet1
     ports:
       - "634:8080"
     networks:
       - custom-network  
-        
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "100m"
+
   webapp_aot:
-    image: dotnet1
+    container_name: benchmark_webapp_aot
+    environment:
+      OTEL_SERVICE_NAME: "AotApp"
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
+      OTEL_EXPORTER_OTLP_Headers: "x-otlp-api-key=dev"
+    image: webapp-aot
     ports:
       - "635:8080"
+    networks:
+      - custom-network
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: "100m"
+  
+  
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.0
+    container_name: cadvisor
+    ports:
+      - 8085:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+
     networks:
       - custom-network
 
