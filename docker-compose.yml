@@ -92,7 +92,8 @@ services:
       retries: 10
       start_period: 40s
     depends_on:
-      - cadvisor
+      cadvisor: 
+        condition: service_healthy
   
   dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
