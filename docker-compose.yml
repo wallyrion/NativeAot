@@ -112,6 +112,9 @@ services:
   
   webapp_no_aot:
     container_name: benchmark_webapp_no_aot
+    build:
+      context: ./WebAppNoAot  # Path to your Dockerfile
+      dockerfile: Dockerfile
     environment:
       OTEL_SERVICE_NAME: "NoAotApp"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
@@ -133,6 +136,9 @@ services:
       OTEL_SERVICE_NAME: "AotApp"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
       OTEL_EXPORTER_OTLP_Headers: "x-otlp-api-key=dev"
+    build:
+      context: ./WebAppAot  # Path to your Dockerfile
+      dockerfile: Dockerfile
     image: aotapp
     ports:
       - "635:8080"

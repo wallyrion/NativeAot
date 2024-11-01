@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Folder Name="/items/">
+    <File Path="docker-compose.yml" />
+  </Folder>
+  <Project Path="WebAotSample.csproj" Type="Classic C#" />
+</Solution>

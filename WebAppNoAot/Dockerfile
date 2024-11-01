@@ -8,7 +8,7 @@ ARG TARGETARCH
 # Copy source code and publish app
 COPY --link . .
 
-RUN dotnet publish -r linux-amd64 -o /app
+RUN dotnet publish -r linux-amd64 -o /app WebAppNoAot.csproj
 
 
 # Runtime stage
