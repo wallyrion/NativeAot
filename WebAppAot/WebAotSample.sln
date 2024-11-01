@@ -1,11 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAotSample", "WebAotSample.csproj", "{709CF0C3-B9E2-4EDC-98BF-7C4C25E4FB35}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAotSample", "WebAotSample\WebAotSample.csproj", "{709CF0C3-B9E2-4EDC-98BF-7C4C25E4FB35}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "items", "items", "{A37A20AA-7F9C-4847-8052-8EC8FE6EDE8C}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
-		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Global

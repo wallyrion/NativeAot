@@ -16,6 +16,10 @@ services:
         condition: service_healthy
       grafana:
         condition: service_healthy
+      webapp_aot:
+        condition: service_healthy
+      webapp_no_aot:
+        condition: service_healthy
       
     networks:
       - custom-network
@@ -31,7 +35,15 @@ services:
     environment:
       K6_PROMETHEUS_RW_SERVER_URL: "http://prometheus:9090/api/v1/write"
       BASE_URL: "http://webapp_aot:8080"
-
+    depends_on:
+      prometheus:
+        condition: service_healthy
+      grafana:
+        condition: service_healthy
+      webapp_aot:
+        condition: service_healthy
+      webapp_no_aot:
+        condition: service_healthy
     networks:
       - custom-network
     ports:
@@ -103,7 +115,7 @@ services:
       OTEL_SERVICE_NAME: "NoAotApp"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
       OTEL_EXPORTER_OTLP_Headers: "x-otlp-api-key=dev"
-    image: dotnet1
+    image: noaotapp
     ports:
       - "634:8080"
     networks:
@@ -120,7 +132,7 @@ services:
       OTEL_SERVICE_NAME: "AotApp"
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
       OTEL_EXPORTER_OTLP_Headers: "x-otlp-api-key=dev"
-    image: webapp-aot
+    image: aotapp
     ports:
       - "635:8080"
     networks:

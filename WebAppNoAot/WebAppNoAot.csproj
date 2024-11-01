@@ -13,6 +13,19 @@
         <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.9.0-beta.2" />
         <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0-beta.1" />
         <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+        <PackageReference Include="Wallyrion.HealthCheck.AspNetCore" Version="0.2.20-beta" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="healthapp\bin\Debug\net9.0\healthapp.deps.json" />
+      <_ContentIncludedByDefault Remove="healthapp\bin\Debug\net9.0\healthapp.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="healthapp\bin\Release\net9.0\win-x64\healthapp.deps.json" />
+      <_ContentIncludedByDefault Remove="healthapp\bin\Release\net9.0\win-x64\healthapp.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="healthapp\obj\Debug\net9.0\healthapp.sourcelink.json" />
+      <_ContentIncludedByDefault Remove="healthapp\obj\healthapp.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="healthapp\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="healthapp\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="healthapp\obj\Release\net9.0\win-x64\healthapp.sourcelink.json" />
     </ItemGroup>
 
 </Project>

@@ -7,7 +7,6 @@ ARG TARGETARCH
 # Copy project file and restore as distinct layers
 # Copy source code and publish app
 COPY --link . .
-RUN dotnet publish ./HealthConsoleApp/HealthConsoleApp/HealthConsoleApp.csproj -o /healthcheck -r linux-amd64
 
 RUN dotnet publish -r linux-amd64 -o /app
 
@@ -18,10 +17,8 @@ EXPOSE 8080
 WORKDIR /app
 COPY --link --from=build /app .
 
-
 USER $APP_UID
 
-HEALTHCHECK CMD ["./WebAppNoAot"]
-
+HEALTHCHECK --interval=60s --timeout=10s --retries=3 --start-period=5s CMD ["./WebAppNoAot", "--health", "--url", "http://localhost:8080/healthz"]
 
 ENTRYPOINT ["./WebAppNoAot"]
