@@ -1,12 +1,14 @@
 # Learn about building .NET container images:
 # https://github.com/dotnet/dotnet-docker/blob/main/samples/README.md
-FROM mcr.microsoft.com/dotnet/sdk:9.0.100-rc.2-noble-amd64 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.100-rc.2 AS build
 WORKDIR /source
 ARG TARGETARCH
 
 # Copy project file and restore as distinct layers
 # Copy source code and publish app
 COPY --link . .
+RUN dotnet publish ./HealthConsoleApp/HealthConsoleApp/HealthConsoleApp.csproj -o /healthcheck -r linux-amd64
+
 RUN dotnet publish -r linux-amd64 -o /app
 
 
@@ -18,4 +20,8 @@ COPY --link --from=build /app .
 
 
 USER $APP_UID
+
+HEALTHCHECK CMD ["./WebAppNoAot"]
+
+
 ENTRYPOINT ["./WebAppNoAot"]

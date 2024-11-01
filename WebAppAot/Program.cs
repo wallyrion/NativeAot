@@ -25,7 +25,11 @@ var app = builder.Build();
 app.MapPrometheusScrapingEndpoint();
 
 var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", TodoGenerator.GenerateRandomTodo);
+todosApi.MapGet("/", () =>
+{
+    Console.WriteLine("Generating random todos");
+    return TodoGenerator.GenerateRandomTodo();
+});
 
 app.Run();
 

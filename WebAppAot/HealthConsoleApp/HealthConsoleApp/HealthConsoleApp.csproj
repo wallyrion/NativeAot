@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <StripSymbols>false</StripSymbols>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PublishAot>true</PublishAot>
+        <InvariantGlobalization>true</InvariantGlobalization>
+        <OptimizationPreference>Size</OptimizationPreference>
+        <PublishTrimmed>true</PublishTrimmed>
+        <TrimMode>full</TrimMode>
+        <AutoreleasePoolSupport>false</AutoreleasePoolSupport>
+        <DebuggerSupport>false</DebuggerSupport>
+        <UseNativeHttpHandler>true</UseNativeHttpHandler>
+        <MetricsSupport>false</MetricsSupport>
+        <StackTraceSupport>false</StackTraceSupport>
+        <EventSourceSupport>false</EventSourceSupport>
+        <UseSystemResourceKeys>true</UseSystemResourceKeys>
+        <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
+        <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+        <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
+        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+        <CustomResourceTypesSupport>false</CustomResourceTypesSupport>
+        <EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization>false</EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization>
+        <StartupHookSupport>false</StartupHookSupport>
+    </PropertyGroup>
+
+</Project>

@@ -12,6 +12,7 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Remove="HealthConsoleApp\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,6 +20,29 @@
       <PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" Version="1.9.0-beta.2" />
       <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0-beta.1" />
       <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="HealthConsoleApp\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="HealthConsoleApp\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="HealthConsoleApp\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="HealthConsoleApp\HealthConsoleApp\nuget.config" />
+      <_ContentIncludedByDefault Remove="HealthConsoleApp\nuget.config" />
+      <_ContentIncludedByDefault Remove="HealthConsoleApp\HealthConsoleApp\bin\Release\net9.0\win-x64\HealthConsoleApp.deps.json" />
+      <_ContentIncludedByDefault Remove="HealthConsoleApp\HealthConsoleApp\bin\Release\net9.0\win-x64\HealthConsoleApp.runtimeconfig.json" />
+      <_ContentIncludedByDefault Remove="HealthConsoleApp\HealthConsoleApp\obj\HealthConsoleApp.csproj.nuget.dgspec.json" />
+      <_ContentIncludedByDefault Remove="HealthConsoleApp\HealthConsoleApp\obj\project.assets.json" />
+      <_ContentIncludedByDefault Remove="HealthConsoleApp\HealthConsoleApp\obj\project.packagespec.json" />
+      <_ContentIncludedByDefault Remove="HealthConsoleApp\HealthConsoleApp\obj\Release\net9.0\win-x64\HealthConsoleApp.sourcelink.json" />
     </ItemGroup>
 
 </Project>
