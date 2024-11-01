@@ -2,6 +2,24 @@ using System.Text.Json.Serialization;
 using OpenTelemetry;
 using OpenTelemetry.Metrics;
 
+if (args.Contains("--health"))
+{
+    Console.WriteLine("args = " + string.Join(" ", args));
+    try
+    {
+        using var httpClient = new HttpClient();
+        var result = await httpClient.GetAsync("http://localhost:8080/todos");
+        result.EnsureSuccessStatusCode();
+
+        return 0;
+    }
+    catch (Exception)
+    {
+        return 1;
+    }
+}
+
+
 var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.Services.AddOpenTelemetry()
@@ -32,6 +50,8 @@ todosApi.MapGet("/", () =>
 });
 
 app.Run();
+
+return 0;
 
 
 public record Todo(Guid Id, string? Title, string Description, DateOnly? DueBy = null, bool IsComplete = false);
@@ -67,6 +87,7 @@ public static class TodoGenerator
         return new string(result);
     }
 }
+
 
 
 
