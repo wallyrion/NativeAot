@@ -1,4 +1,9 @@
-FROM mcr.microsoft.com/dotnet/nightly/sdk:9.0-noble-aot AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.100-rc.2-noble AS build
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       clang zlib1g-dev
+
 WORKDIR /source
 
 COPY --link . .
