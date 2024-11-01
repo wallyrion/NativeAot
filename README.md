@@ -27,4 +27,4 @@ All dashboards are provisioned with docker-compose
 ### CAdvisor
 Allows to collect metrics about docker containers (cpu usage, memory usage, etc.)
 ### Aspire dashboard
-Allows to see default .net [build-in](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/built-in-metrics) metrics that are send to standalone dashboard via OpenTelemetry protocol.
+Allows to see default .net [built-in](https://learn.microsoft.com/en-us/dotnet/core/diagnostics/built-in-metrics) metrics that are send to standalone dashboard via OpenTelemetry protocol.
