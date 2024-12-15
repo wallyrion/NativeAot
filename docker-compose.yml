@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   k6_test_no_aot:
     image: grafana/k6
@@ -113,7 +111,7 @@ services:
   webapp_no_aot:
     container_name: benchmark_webapp_no_aot
     build:
-      context: ./WebAppNoAot  # Path to your Dockerfile
+      context: ./SampleApps/WebAppNoAot  # Path to your Dockerfile
       dockerfile: Dockerfile
     environment:
       OTEL_SERVICE_NAME: "NoAotApp"
@@ -128,7 +126,7 @@ services:
       resources:
         limits:
           cpus: "1"
-          memory: "100m"
+          memory: "250m"
 
   webapp_aot:
     container_name: benchmark_webapp_aot
@@ -137,7 +135,7 @@ services:
       OTEL_EXPORTER_OTLP_ENDPOINT: "http://dashboard:18889"
       OTEL_EXPORTER_OTLP_Headers: "x-otlp-api-key=dev"
     build:
-      context: ./WebAppAot  # Path to your Dockerfile
+      context: ./SampleApps/WebAppAot  # Path to your Dockerfile
       dockerfile: Dockerfile
     image: aotapp
     ports:
@@ -148,12 +146,12 @@ services:
       resources:
         limits:
           cpus: "1"
-          memory: "100m"
+          memory: "250m"
   
   
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.47.0
-    container_name: cadvisor
+    container_name: cadvisor2
     ports:
       - 8085:8080
     volumes:

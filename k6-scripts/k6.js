@@ -7,7 +7,7 @@ export const options = {
         { duration: '30s', target: 5 },
          { duration: '1m', target: 1000 }, // simulate ramp-up of traffic from 1 to 100 users over 5 minutes.
         { duration: '1m', target: 0 }, // ramp-down to 0 users
-        { duration: '10m', target: 20000 }, 
+        { duration: '10m', target: 5000 }, 
         { duration: '1m', target: 0 }
     ],
     thresholds: {
